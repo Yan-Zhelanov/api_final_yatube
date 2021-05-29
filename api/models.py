@@ -34,7 +34,10 @@ class Post(models.Model):
     )
 
     def __str__(self):
-        return self.text
+        return (f'{self.text[:15]},'
+                f'{self.pub_date.strftime("%d.%m.%Y %H:%M")}'
+                f'{self.author.username}'
+                f'{self.group}')
 
     class Meta:
         ordering = ('-pub_date',)
@@ -59,6 +62,9 @@ class Comment(models.Model):
         db_index=True,
         verbose_name="Дата добавления",
     )
+
+    class Meta:
+        ordering = ('-created',)
 
 
 class Follow(models.Model):
