@@ -34,13 +34,11 @@ class FollowSerializer(ModelSerializer):
                                  queryset=User.objects.all())
 
     def validate(self, attrs):
-        if (self.context['request'].user == attrs['following']
-           or Follow.objects.filter(user=self.context['request'].user,
-                                    following=attrs['following']).exists()):
-            raise ValidationError(
-                'Введено некорректное имя пользователя, либо вы уже '
-                'подписаны на этого пользователя!'
-            )
+        if self.context['request'].user == attrs['following']:
+            raise ValidationError('Нельзя подписаться на самого себя!')
+        if Follow.objects.filter(user=self.context['request'].user,
+                                 following=attrs['following']).exists():
+            raise ValidationError('Вы уже подписаны на этого пользователя!')
         return attrs
 
     class Meta:
